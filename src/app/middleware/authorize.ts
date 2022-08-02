@@ -25,7 +25,7 @@ const authorize = (permittedRoles?: string[]) => {
 
       const decodedData = JSON.parse(JSON.stringify(data));
 
-      if (!(permittedRoles.includes(decodedData.role))) {
+      if ((typeof permittedRoles !== 'undefined') && (!(permittedRoles.includes(decodedData.role)))) {
         throw new UserNotAuthorizedException(ErrorCodes.UNAUTHORIZED);
       }
       return next();
