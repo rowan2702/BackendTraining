@@ -19,18 +19,18 @@ class EmployeeController extends AbstractController {
   protected initializeRoutes() {
     this.router.get(
       `${this.path}`,
-      authorize(['admin']),
+      authorize(APP_CONSTANTS.permittedRoles),
       this.getEmployee);
     
     this.router.get(
       `${this.path}/:id`,
-      authorize(['admin']),
+      authorize(APP_CONSTANTS.permittedRoles),
       validationMiddleware(ParamDto,APP_CONSTANTS.params),
       this.getEmployeeId);
 
     this.router.post(
       `${this.path}`,
-      authorize(['admin']),
+      authorize(APP_CONSTANTS.permittedRoles),
       validationMiddleware(CreateEmployeeDto,APP_CONSTANTS.body), 
       this.createEmployee);
 
@@ -43,7 +43,7 @@ class EmployeeController extends AbstractController {
 
     this.router.delete(
       `${this.path}/:id`,
-      authorize(['admin']),
+      authorize(APP_CONSTANTS.permittedRoles),
       validationMiddleware(ParamDto,APP_CONSTANTS.params), 
       this.deleteEmployee);
 

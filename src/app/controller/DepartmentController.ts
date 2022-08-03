@@ -23,20 +23,20 @@ class DepartmentController extends AbstractController {
 
     this.router.post(
       `${this.path}`,
-      authorize(['admin']),
+      authorize(APP_CONSTANTS.permittedRoles),
       validationMiddleware(CreateDepartmentDto,APP_CONSTANTS.body), 
       this.createDepartment);
 
     this.router.put(
       `${this.path}/:id`, 
-      authorize(['admin']),
+      authorize(APP_CONSTANTS.permittedRoles),
       validationMiddleware(UpdateDepartmentDto,APP_CONSTANTS.body),
       validationMiddleware(ParamDto,APP_CONSTANTS.params),
       this.updateDepartment);
 
     this.router.delete(
       `${this.path}/:id`, 
-      authorize(['admin']),
+      authorize(APP_CONSTANTS.permittedRoles),
       validationMiddleware(ParamDto,APP_CONSTANTS.params),
       this.deleteDepartment);
 

@@ -3,6 +3,7 @@ const APP_CONSTANTS = {
     params: "params",
     query: "query",
     body: "body",
+    permittedRoles: ['admin'],
     authorizationHeader: "Authorization",
     bearer: "Bearer",
     basePath:`http://localhost:${process.env.PORT}`,
