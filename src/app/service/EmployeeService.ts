@@ -39,6 +39,11 @@ export class EmployeeService{
     async updateEmployee(id: string, employeeDetails: DeepPartial<UpdateEmployeeDto>){
       const employee = await this.employeeRepo.getEmployeeById(id, ["address"]);
 
+      employee.name = employeeDetails.name ? employeeDetails.name : employee.name;
+      employee.joiningDate = employeeDetails.joiningDate ? employeeDetails.joiningDate : employee.joiningDate;
+      employee.role = employeeDetails.role ? employeeDetails.role : employee.role;
+      employee.status = employeeDetails.status ? employeeDetails.status : employee.status;
+
       employee.address.line1 = employeeDetails.address.line1 ? employeeDetails.address.line1 : employee.address.line1;
       employee.address.line2 = employeeDetails.address.line2 ? employeeDetails.address.line2 : employee.address.line2;  
       employee.address.city = employeeDetails.address.city ? employeeDetails.address.city : employee.address.city;
