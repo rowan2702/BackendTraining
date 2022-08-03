@@ -1,7 +1,7 @@
 import { plainToClass } from "class-transformer";
 import { NextFunction } from "express";
 import { stringify } from "querystring";
-import { getConnection } from "typeorm";
+import { DeepPartial, getConnection } from "typeorm";
 import { EmployeeRespository } from "../../repository/employeeRepository";
 import { Employee } from "../entities/Employee";
 import EntityNotFoundException from "../exception/EntityNotFoundException";
@@ -12,33 +12,45 @@ import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken"
 import UserNotAuthorizedException from "../exception/UserNotAuthorizedException";
 import IncorrectUsernameOrPasswordException from "../exception/IncorrectUsernameOrPasswordException";
+import { UpdateEmployeeDto } from "../dto/updateEmployeeDto";
+import { CreateEmployeeDto } from "../dto/createEmployeeDto";
 
 export class EmployeeService{
     constructor(private employeeRepo: EmployeeRespository){
 
     }
 
-    async getAllEmployees(){
+    async getAllEmployees(): Promise<Employee[]> {
         return await this.employeeRepo.getAllEmployees();
     }
 
-    async deleteEmployee(id: string){
+    async deleteEmployee(id: string): Promise<Employee> {
         return await this.employeeRepo.softDeleteEmployeeById(id);
     }
 
     async getEmployeeId(id: string){
-        const employee = await this.employeeRepo.getEmployeeId(id);
+        const employee = await this.employeeRepo.getEmployeeById(id);
         if(!employee) {
             throw new EntityNotFoundException(ErrorCodes.EMPLOYEE_WITH_ID_NOT_FOUND);
         }
         return 
     }
 
-    async updateEmployee(id: string, employeeDetails: any){
-        return await this.employeeRepo.updateEmployeeDetails(id, employeeDetails);
+    async updateEmployee(id: string, employeeDetails: DeepPartial<UpdateEmployeeDto>){
+      const employee = await this.employeeRepo.getEmployeeById(id, ["address"]);
+
+      employee.address.line1 = employeeDetails.address.line1 ? employeeDetails.address.line1 : employee.address.line1;
+      employee.address.line2 = employeeDetails.address.line2 ? employeeDetails.address.line2 : employee.address.line2;  
+      employee.address.city = employeeDetails.address.city ? employeeDetails.address.city : employee.address.city;
+      employee.address.state = employeeDetails.address.state ? employeeDetails.address.state : employee.address.state;
+      employee.address.country = employeeDetails.address.country ? employeeDetails.address.country : employee.address.country;
+      employee.address.pincode = employeeDetails.address.pincode ? employeeDetails.address.pincode : employee.address.pincode;
+
+      
+      return await this.employeeRepo.updateEmployeeDetails(id, employee);
     }
 
-    public async createEmployee(employeeDetails: any) {
+    public async createEmployee(employeeDetails: CreateEmployeeDto) {
         try {
             const newEmployee = plainToClass(Employee, {
                 name: employeeDetails.name,
@@ -48,6 +60,7 @@ export class EmployeeService{
                 username: employeeDetails.username,
                 password: employeeDetails.password ? await bcrypt.hash(employeeDetails.password, 10): '',
                 departmentId: employeeDetails.departmentId,
+                address: employeeDetails.address,
                 // isActive: true,
             });
             const save = await this.employeeRepo.saveEmployeeDetails(newEmployee);

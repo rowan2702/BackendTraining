@@ -9,7 +9,7 @@ import { Employee } from "./Employee";
         @Column({ nullable: false })
         public name: string;
         @OneToMany(() => Employee, (employee) => employee.department)
-            @JoinColumn()
-            public employee: Employee[];
+        @JoinColumn()
+        public employee: Employee[];
                 
 }

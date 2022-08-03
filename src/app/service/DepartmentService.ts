@@ -1,6 +1,8 @@
 import { plainToClass } from "class-transformer";
 import { NextFunction } from "express";
 import { DepartmentRespository } from "../../repository/departmentRepository";
+import { CreateDepartmentDto } from "../dto/createDepartment";
+import { UpdateDepartmentDto } from "../dto/updateDepartment";
 import { Department } from "../entities/Department";
 import HttpException from "../exception/HttpException";
 import RequestWithUser from "../util/rest/request";
@@ -10,15 +12,15 @@ export class DepartmentService{
 
     }
 
-    async getAllDepartments(){
+    async getAllDepartments(): Promise<Department[]>{
         return await this.departmentRepo.getAllDepartments();
     }
 
-    async updateDepartment(id: string, employeeDetails: any){
-        return await this.departmentRepo.updateDepartmentDetails(id, employeeDetails);
+    async updateDepartment(id: string, departmentDetails: UpdateDepartmentDto){
+        return await this.departmentRepo.updateDepartmentDetails(id, departmentDetails);
     }
 
-    public async createDepartment(departmentDetails: any) {
+    public async createDepartment(departmentDetails: CreateDepartmentDto) {
         try {
             const newDepartment = plainToClass(Department, {
                 name: departmentDetails.name,

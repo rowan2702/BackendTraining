@@ -1,33 +1,31 @@
-import { getConnection } from "typeorm";
+import { DeepPartial, getConnection } from "typeorm";
 import { Employee } from "../app/entities/Employee";
 
 export class EmployeeRespository{
-    async getAllEmployees(){
+    async getAllEmployees(): Promise<Employee[]> {
          const employeeRepo = getConnection().getRepository(Employee);
-        return employeeRepo.find({relations: ['department']});
+        return employeeRepo.find({relations: ['department','address']});
     }
 
-    async getEmployeeId(id: string){
+    async getEmployeeById(id: string, relations?: string[]): Promise<Employee> {
         const employeeRepo = getConnection().getRepository(Employee);
-        return employeeRepo.findOne(id);
+        return employeeRepo.findOne(id, {relations: relations});
     }
 
-    public async saveEmployeeDetails(employeeDetails: Employee) {
+    public async saveEmployeeDetails(employeeDetails: Employee): Promise<Employee> {
         const employeeRepo = getConnection().getRepository(Employee);
         return employeeRepo.save(employeeDetails);
     }
 
-    public async softDeleteEmployeeById(id: string) {
+    public async softDeleteEmployeeById(id: string): Promise<Employee> {
         const employeeRepo = getConnection().getRepository(Employee);
-        return employeeRepo.softDelete({
-            id
-        });
+        const employee = await this.getEmployeeById(id, ["address"]);
+        return employeeRepo.softRemove(employee);
     }
 
-    public async updateEmployeeDetails(employeeId: string, employeeDetails: any) {
+    public async updateEmployeeDetails(employeeId: string, employeeDetails: DeepPartial<Employee>) {
         const employeeRepo = getConnection().getRepository(Employee);
-        const updateEmployeeDetails = await employeeRepo.update({ id: employeeId, deletedAt: null }, employeeDetails);
-        return updateEmployeeDetails;
+        return employeeRepo.save(employeeDetails);
     }
 
     public async getEmployeeByUsername(username: string) {

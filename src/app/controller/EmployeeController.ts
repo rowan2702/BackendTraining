@@ -49,7 +49,6 @@ class EmployeeController extends AbstractController {
 
     this.router.post(
       `${this.path}/login`,
-      validationMiddleware(LoginEmployeeDto,APP_CONSTANTS.body),
       this.login
     );
   }
