@@ -1,5 +1,5 @@
 import { DeepPartial, getConnection } from "typeorm";
-import { Department } from "../app/entities/Department";
+import { Department } from "../entities/Department";
 
 export class DepartmentRespository{
     async getAllDepartments(): Promise<Department[]> {

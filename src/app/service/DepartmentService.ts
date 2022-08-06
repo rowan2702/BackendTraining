@@ -1,6 +1,6 @@
 import { plainToClass } from "class-transformer";
 import { NextFunction } from "express";
-import { DepartmentRespository } from "../../repository/departmentRepository";
+import { DepartmentRespository } from "../repository/departmentRepository";
 import { CreateDepartmentDto } from "../dto/createDepartment";
 import { UpdateDepartmentDto } from "../dto/updateDepartment";
 import { Department } from "../entities/Department";

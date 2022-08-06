@@ -2,7 +2,7 @@ import { plainToClass } from "class-transformer";
 import { NextFunction } from "express";
 import { stringify } from "querystring";
 import { DeepPartial, getConnection } from "typeorm";
-import { EmployeeRespository } from "../../repository/employeeRepository";
+import { EmployeeRespository } from "../repository/employeeRepository";
 import { Employee } from "../entities/Employee";
 import EntityNotFoundException from "../exception/EntityNotFoundException";
 import HttpException from "../exception/HttpException";
